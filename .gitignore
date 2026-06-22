@@ -1,0 +1,76 @@
+# --------------------------
+# Python
+# --------------------------
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.egg-info/
+dist/
+build/
+*.egg
+*.whl
+.env
+.venv/
+venv/
+env/
+ENV/
+.pytest_cache/
+.tox/
+.mypy_cache/
+.ruff_cache/
+.pdm.toml
+.pdm.lock
+poetry.lock
+Pipfile.lock
+
+# --------------------------
+# Database & Local Data
+# --------------------------
+*.db
+*.sqlite
+*.sqlite3
+db.sqlite3
+data/
+*.csv
+*.json
+
+# --------------------------
+# Docker & Containers
+# --------------------------
+.dockerignore
+# You can uncomment if you don't want to store local build artifacts
+# *.tar
+# *.img
+
+# --------------------------
+# IDE & Editor Files
+# --------------------------
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+*.tmp
+*.temp
+
+# --------------------------
+# Sensitive Configuration
+# --------------------------
+# Never commit your environment file!
+.env
+.env.local
+.env.production
+.env.development
+config.local.py
+
+# --------------------------
+# Logs & Runtime Files
+# --------------------------
+logs/
+*.log
+*.out
+*.pid
+*.sock

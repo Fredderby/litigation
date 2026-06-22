@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+    <title>DCLM Land Litigation | Ghana</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+    <div class="container">
+        <header class="form-header">
+            <h1>DCLM Land Litigation Form</h1>
+            <p>Deeper Christian Life Ministry-Ghana</p>
+        </header>
+
+        {% if success %}
+        <div class="success-alert">
+            ✅ Form submitted successfully. Thank you.
+        </div>
+        {% endif %}
+
+        {% if error %}
+        <div class="error-alert">
+            ❌ {{ error }}
+        </div>
+        {% endif %}
+
+        <form action="/submit" method="POST" class="litigation-form">
+            <div class="form-group">
+                <label for="region">Church Region</label>
+                <select id="region" name="region" required>
+                    <option value="">-- Select Region --</option>
+                    {% for r in regions %}
+                    <option value="{{ r }}">{{ r }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="division">Division</label>
+                <select id="division" name="division" required disabled>
+                    <option value="">-- Select Division --</option>
+                </select>
+            </div>
+
+            <div class="form-group conditional-group" id="metroGroup">
+                <label for="metro_area">Accra Metro Area</label>
+                <select id="metro_area" name="metro_area">
+                    <option value="">-- Select Metro Area --</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="land_location">Location of the Land</label>
+                <input type="text" id="land_location" name="land_location" required placeholder="e.g. Near main road, Town/Area">
+            </div>
+
+            <div class="form-group">
+                <label for="land_size">Land Size</label>
+                <input type="text" id="land_size" name="land_size" required placeholder="e.g. 2 Acres, 5 Plots, etc.">
+            </div>
+
+            <div class="form-group">
+                <label for="lawyer_name">Name of Lawyer in Charge</label>
+                <input type="text" id="lawyer_name" name="lawyer_name" required>
+            </div>
+
+            <div class="form-group">
+                <label for="court_name">Name of Court Handling the Case</label>
+                <input type="text" id="court_name" name="court_name" required>
+            </div>
+
+            <div class="form-group">
+                <label for="dispute_reason">Why is the land in dispute? <small>(max 150 characters)</small></label>
+                <textarea id="dispute_reason" name="dispute_reason" rows="3" maxlength="150" required placeholder="Briefly explain..."></textarea>
+                <div class="char-count" id="charCount">0 / 150</div>
+            </div>
+
+            <div class="form-group">
+                <button type="submit" class="submit-btn">Submit Details</button>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        const regionSelect = document.getElementById('region');
+        const divisionSelect = document.getElementById('division');
+        const metroGroup = document.getElementById('metroGroup');
+        const metroSelect = document.getElementById('metro_area');
+        const textarea = document.getElementById('dispute_reason');
+        const charCount = document.getElementById('charCount');
+
+        regionSelect.addEventListener('change', async () => {
+            const region = regionSelect.value;
+            divisionSelect.innerHTML = '<option value="">-- Select Division --</option>';
+            divisionSelect.disabled = true;
+            metroGroup.classList.remove('active');
+            metroSelect.value = "";
+
+            if (region) {
+                const res = await fetch(`/api/divisions/${region}`);
+                const data = await res.json();
+                data.divisions.forEach(div => {
+                    const opt = document.createElement('option');
+                    opt.value = div;
+                    opt.textContent = div;
+                    divisionSelect.appendChild(opt);
+                });
+                divisionSelect.disabled = false;
+            }
+        });
+
+        divisionSelect.addEventListener('change', async () => {
+            const division = divisionSelect.value;
+            if (division === "Accra Metro div") {
+                const res = await fetch('/api/metro-areas');
+                const data = await res.json();
+                metroSelect.innerHTML = '<option value="">-- Select Metro Area --</option>';
+                data.metro_areas.forEach(area => {
+                    const opt = document.createElement('option');
+                    opt.value = area;
+                    opt.textContent = area;
+                    metroSelect.appendChild(opt);
+                });
+                metroGroup.classList.add('active');
+            } else {
+                metroGroup.classList.remove('active');
+                metroSelect.value = "";
+            }
+        });
+
+        textarea.addEventListener('input', () => {
+            const len = textarea.value.length;
+            charCount.textContent = `${len} / 150`;
+            charCount.classList.toggle('near-limit', len > 120);
+            charCount.classList.toggle('at-limit', len >= 150);
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,321 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+}
+
+:root {
+    --primary: #0a4b78;
+    --primary-dark: #083a5e;
+    --success: #166534;
+    --success-light: #e6f9ed;
+    --danger: #991b1b;
+    --danger-light: #fef2f2;
+    --gray-50: #f8fafc;
+    --gray-100: #f1f5f9;
+    --gray-200: #e2e8f0;
+    --gray-600: #475569;
+    --gray-700: #334155;
+    --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+    --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+body {
+    background: linear-gradient(135deg, #f0f4f8 0%, #d9e2ec 100%);
+    min-height: 100vh;
+    padding: 1rem;
+    line-height: 1.6;
+    color: var(--gray-700);
+}
+
+.container {
+    max-width: 720px;
+    margin: 0 auto;
+    background: #ffffff;
+    border-radius: 16px;
+    box-shadow: var(--shadow-lg);
+    overflow: hidden;
+    animation: fadeInUp 0.6s ease-out;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.form-header {
+    background: var(--primary);
+    color: white;
+    padding: 2rem 1.5rem;
+    text-align: center;
+    transition: var(--transition);
+}
+
+.form-header h1 {
+    font-size: clamp(1.5rem, 4vw, 2rem);
+    margin-bottom: 0.5rem;
+    font-weight: 700;
+}
+
+.form-header p {
+    opacity: 0.92;
+    font-size: clamp(1rem, 2.5vw, 1.1rem);
+    font-weight: 300;
+}
+
+.success-alert,
+.error-alert {
+    margin: 1.5rem;
+    padding: 1.2rem;
+    border-radius: 8px;
+    border-left: 5px solid;
+    animation: slideIn 0.4s ease-out;
+    font-weight: 500;
+}
+
+.success-alert {
+    background: var(--success-light);
+    border-color: #22c55e;
+    color: var(--success);
+}
+
+.error-alert {
+    background: var(--danger-light);
+    border-color: #dc2626;
+    color: var(--danger);
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateX(-12px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+.litigation-form {
+    padding: 1.8rem 1.5rem;
+}
+
+.form-group {
+    margin-bottom: 1.6rem;
+    position: relative;
+}
+
+label {
+    display: block;
+    margin-bottom: 0.6rem;
+    font-weight: 500;
+    color: var(--gray-700);
+    font-size: 0.98rem;
+    transition: var(--transition);
+}
+
+input,
+select,
+textarea {
+    width: 100%;
+    padding: 0.95rem 1rem;
+    border: 2px solid var(--gray-200);
+    border-radius: 10px;
+    font-size: 1rem;
+    color: var(--gray-700);
+    background: #ffffff;
+    transition: var(--transition);
+    appearance: none;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(10, 75, 120, 0.15);
+    transform: translateY(-1px);
+}
+
+select {
+    background-image: url("data:image/svg+xml,%3Csvg fill='%23475569' height='24' viewBox='0 0 24 24' width='24' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M7 10l5 5 5-5z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 1rem center;
+    background-size: 1.2rem;
+    padding-right: 2.5rem;
+}
+
+textarea {
+    resize: vertical;
+    min-height: 100px;
+}
+
+.conditional-group {
+    max-height: 0;
+    opacity: 0;
+    overflow: hidden;
+    transition: all 0.45s cubic-bezier(0.4, 0, 0.2, 1);
+    margin-bottom: 0;
+}
+
+.conditional-group.active {
+    max-height: 220px;
+    opacity: 1;
+    margin-bottom: 1.6rem;
+}
+
+.char-count {
+    text-align: right;
+    font-size: 0.85rem;
+    color: var(--gray-600);
+    margin-top: 0.5rem;
+    transition: var(--transition);
+}
+
+.char-count.near-limit {
+    color: #d97706;
+}
+
+.char-count.at-limit {
+    color: var(--danger);
+    font-weight: 500;
+}
+
+.submit-btn {
+    width: 100%;
+    padding: 1.1rem;
+    background: var(--primary);
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: var(--transition);
+    box-shadow: var(--shadow-md);
+}
+
+.submit-btn:hover {
+    background: var(--primary-dark);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-lg);
+}
+
+.submit-btn:active {
+    transform: translateY(0);
+    box-shadow: var(--shadow-md);
+}
+
+/* Admin Panel Styles */
+.admin-container {
+    max-width: 1100px;
+}
+
+.login-box {
+    max-width: 460px;
+    margin: 2rem auto;
+}
+
+.back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    margin: 0 0 1.5rem;
+    color: var(--primary);
+    text-decoration: none;
+    font-weight: 500;
+    transition: var(--transition);
+}
+
+.back-link:hover {
+    color: var(--primary-dark);
+    text-decoration: underline;
+}
+
+.table-wrapper {
+    width: 100%;
+    overflow-x: auto;
+    border-radius: 10px;
+    box-shadow: var(--shadow-sm);
+}
+
+table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    margin-top: 1rem;
+    font-size: 0.95rem;
+    animation: fadeInUp 0.5s ease-out;
+}
+
+th,
+td {
+    padding: 1rem;
+    text-align: left;
+    border-bottom: 1px solid var(--gray-200);
+    transition: var(--transition);
+}
+
+th {
+    background: var(--gray-50);
+    font-weight: 600;
+    color: var(--primary);
+    position: sticky;
+    top: 0;
+}
+
+tr:last-child td {
+    border-bottom: none;
+}
+
+tr:hover td {
+    background: var(--gray-50);
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+    body {
+        padding: 0.5rem;
+    }
+
+    .form-header {
+        padding: 1.5rem 1rem;
+    }
+
+    .litigation-form {
+        padding: 1.5rem 1rem;
+    }
+
+    th,
+    td {
+        padding: 0.8rem 0.6rem;
+        font-size: 0.9rem;
+    }
+
+    .submit-btn {
+        padding: 1rem;
+        font-size: 1.05rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .form-header h1 {
+        font-size: 1.4rem;
+    }
+
+    input,
+    select,
+    textarea {
+        font-size: 16px; /* Prevents zoom on iOS */
+        padding: 0.85rem;
+    }
+}

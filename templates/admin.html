@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+    <title>Admin | DCLM Land Cases</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+    <div class="container admin-container">
+        <header class="form-header">
+            <h1>DCLM Land Litigation - Admin Panel</h1>
+            <p>Deeper Christian Life Ministry-Ghana</p>
+        </header>
+
+        {% if show_login %}
+        <div class="litigation-form login-box">
+            <h3 style="margin-bottom: 1.5rem; color: var(--gray-700); text-align: center;">Admin Login</h3>
+            {% if error %}
+            <div class="error-alert">{{ error }}</div>
+            {% endif %}
+            <form method="POST">
+                <div class="form-group">
+                    <label>Username</label>
+                    <input type="text" name="username" required>
+                </div>
+                <div class="form-group">
+                    <label>Password</label>
+                    <input type="password" name="password" required>
+                </div>
+                <button type="submit" class="submit-btn">Login</button>
+            </form>
+            <a href="/" class="back-link">← Back to Form</a>
+        </div>
+        {% else %}
+        <div class="litigation-form">
+            <a href="/" class="back-link">← Back to Form</a>
+            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; margin-bottom: 1rem;">
+                <h3 style="color: var(--gray-700);">All Submitted Cases</h3>
+                <a href="/export/csv" class="submit-btn" style="width: auto; padding: 0.7rem 1.2rem; font-size: 0.95rem;">📥 Export to CSV</a>
+            </div>
+
+            {% if cases %}
+            <div class="table-wrapper">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Region</th>
+                            <th>Division</th>
+                            <th>Metro Area</th>
+                            <th>Land Location</th>
+                            <th>Size</th>
+                            <th>Lawyer</th>
+                            <th>Court</th>
+                            <th>Dispute</th>
+                            <th>Submitted</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for case in cases %}
+                        <tr>
+                            <td>{{ case.id }}</td>
+                            <td>{{ case.region }}</td>
+                            <td>{{ case.division }}</td>
+                            <td>{{ case.metro_area or "—" }}</td>
+                            <td>{{ case.land_location }}</td>
+                            <td>{{ case.land_size }}</td>
+                            <td>{{ case.lawyer_name }}</td>
+                            <td>{{ case.court_name }}</td>
+                            <td>{{ case.dispute_reason }}</td>
+                            <td>{{ case.submitted_at.strftime('%Y-%m-%d %H:%M') }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <p style="text-align: center; padding: 2rem; color: var(--gray-600); font-size: 1.1rem;">No cases submitted yet.</p>
+            {% endif %}
+        </div>
+        {% endif %}
+    </div>
+</body>
+</html>
