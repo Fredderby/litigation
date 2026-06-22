@@ -1,0 +1,30 @@
+version: '3.8'
+
+services:
+  land-litigation:
+    build: .
+    container_name: dclm-land-litigation
+    restart: unless-stopped
+    ports:
+      # Map host port 8010 to container port 8010
+      - "8010:8010"
+    environment:
+      # Load variables from your .env file
+      - ADMIN_USERNAME=${ADMIN_USERNAME}
+      - ADMIN_PASSWORD=${ADMIN_PASSWORD}
+      - DB_HOST=${DB_HOST}
+      - DB_USER=${DB_USER}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - DB_NAME=${DB_NAME}
+      - DB_PORT=${DB_PORT}
+    env_file:
+      - .env
+    volumes:
+      # Optional: only if you want code changes to reflect without rebuilding
+      # - .:/app
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
