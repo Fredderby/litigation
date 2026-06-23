@@ -68,7 +68,8 @@ async def submit_case(
     land_size: str = Form(...),
     lawyer_name: str = Form(...),
     court_name: str = Form(...),
-    dispute_reason: str = Form(...)
+    dispute_reason: str = Form(...),
+    years_litigation: int = Form(...)  # ✅ Added new field
 ):
     conn = get_db_connection()
     if not conn:
@@ -79,14 +80,15 @@ async def submit_case(
 
     try:
         cursor = conn.cursor()
+        # ✅ Updated query to include new column
         query = """
             INSERT INTO land_cases
-            (region, division, metro_area, land_location, land_size, lawyer_name, court_name, dispute_reason)
-            VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
+            (region, division, metro_area, land_location, land_size, lawyer_name, court_name, dispute_reason, years_litigation)
+            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)
         """
         cursor.execute(query, (
             region, division, metro_area, land_location,
-            land_size, lawyer_name, court_name, dispute_reason
+            land_size, lawyer_name, court_name, dispute_reason, years_litigation
         ))
         conn.commit()
         cursor.close()
@@ -136,12 +138,15 @@ async def export_csv(request: Request, username: Optional[str] = None, password:
     cases = get_all_cases()
     output = StringIO()
     writer = csv.writer(output)
+    # ✅ Updated header to include new field
     writer.writerow([
         "ID", "Region", "Division", "Metro Area", "Land Location",
-        "Land Size", "Lawyer Name", "Court Name", "Dispute Reason", "Submitted At"
+        "Land Size", "Lawyer Name", "Court Name", "Dispute Reason",
+        "Years in Litigation", "Submitted At"
     ])
 
     for case in cases:
+        # ✅ Added new field to CSV row
         writer.writerow([
             case.get("id", ""),
             case.get("region", ""),
@@ -152,6 +157,7 @@ async def export_csv(request: Request, username: Optional[str] = None, password:
             case.get("lawyer_name", ""),
             case.get("court_name", ""),
             case.get("dispute_reason", ""),
+            case.get("years_litigation", ""),
             case.get("submitted_at", datetime.now()).strftime("%Y-%m-%d %H:%M")
         ])
 
@@ -164,4 +170,5 @@ async def export_csv(request: Request, username: Optional[str] = None, password:
 
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run("main:app", host="0.0.0.0", port=8000, reload=True)
+    # ✅ Updated port to match your chosen free port 8010
+    uvicorn.run("main:app", host="0.0.0.0", port=8010, reload=True)

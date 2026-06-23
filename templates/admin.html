@@ -2,82 +2,157 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-    <title>Admin | DCLM Land Cases</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin | DCLM Land Litigation</title>
     <link rel="stylesheet" href="/static/css/style.css">
+    <style>
+        .admin-container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+
+        .login-box {
+            max-width: 450px;
+            margin: 3rem auto;
+            padding: 2rem;
+            background: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .table-wrapper {
+            overflow-x: auto;
+            margin-top: 2rem;
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+        }
+
+        th {
+            background-color: var(--primary);
+            color: white;
+            font-weight: 500;
+        }
+
+        tr:hover {
+            background-color: #f9fafc;
+        }
+
+        .export-btn {
+            display: inline-block;
+            margin: 1rem 0;
+            padding: 0.6rem 1.2rem;
+            background-color: #28a745;
+            color: white;
+            border-radius: 4px;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .export-btn:hover {
+            background-color: #218838;
+        }
+
+        .logout-btn {
+            float: right;
+            padding: 0.5rem 1rem;
+            background: #dc3545;
+            color: white;
+            border-radius: 4px;
+            text-decoration: none;
+        }
+
+        .logout-btn:hover {
+            background: #c82333;
+        }
+    </style>
 </head>
 <body>
-    <div class="container admin-container">
-        <header class="form-header">
-            <h1>DCLM Land Litigation - Admin Panel</h1>
-            <p>Deeper Christian Life Ministry-Ghana</p>
+    <div class="admin-container">
+        <header style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+            <h2>📋 Land Litigation Cases - Admin Panel</h2>
+            {% if not show_login %}
+            <a href="/admin" class="logout-btn">Logout</a>
+            {% endif %}
         </header>
 
         {% if show_login %}
-        <div class="litigation-form login-box">
-            <h3 style="margin-bottom: 1.5rem; color: var(--gray-700); text-align: center;">Admin Login</h3>
+        <!-- Login Form -->
+        <div class="login-box">
+            <h3 style="text-align: center; margin-bottom: 1.5rem;">Admin Login</h3>
             {% if error %}
-            <div class="error-alert">{{ error }}</div>
+            <div class="error-alert" style="margin-bottom: 1rem;">{{ error }}</div>
             {% endif %}
-            <form method="POST">
+            <form method="POST" action="/admin">
                 <div class="form-group">
-                    <label>Username</label>
-                    <input type="text" name="username" required>
+                    <label for="username">Username</label>
+                    <input type="text" id="username" name="username" required>
                 </div>
                 <div class="form-group">
-                    <label>Password</label>
-                    <input type="password" name="password" required>
+                    <label for="password">Password</label>
+                    <input type="password" id="password" name="password" required>
                 </div>
-                <button type="submit" class="submit-btn">Login</button>
+                <button type="submit" class="submit-btn" style="width: 100%;">Login</button>
             </form>
-            <a href="/" class="back-link">← Back to Form</a>
         </div>
-        {% else %}
-        <div class="litigation-form">
-            <a href="/" class="back-link">← Back to Form</a>
-            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; margin-bottom: 1rem;">
-                <h3 style="color: var(--gray-700);">All Submitted Cases</h3>
-                <a href="/export/csv" class="submit-btn" style="width: auto; padding: 0.7rem 1.2rem; font-size: 0.95rem;">📥 Export to CSV</a>
-            </div>
 
-            {% if cases %}
-            <div class="table-wrapper">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>Region</th>
-                            <th>Division</th>
-                            <th>Metro Area</th>
-                            <th>Land Location</th>
-                            <th>Size</th>
-                            <th>Lawyer</th>
-                            <th>Court</th>
-                            <th>Dispute</th>
-                            <th>Submitted</th>
-                        </tr>
-                    </thead>
-                    <tbody>
+        {% else %}
+        <!-- Cases List -->
+        <a href="/export/csv" class="export-btn">📥 Export All to CSV</a>
+
+        <div class="table-wrapper">
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Region</th>
+                        <th>Division</th>
+                        <th>Metro Area</th>
+                        <th>Land Location</th>
+                        <th>Land Size</th>
+                        <th>Lawyer</th>
+                        <th>Court</th>
+                        <th>Dispute Reason</th>
+                        <th>Years in Litigation</th> <!-- ✅ NEW COLUMN -->
+                        <th>Submitted At</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% if cases %}
                         {% for case in cases %}
                         <tr>
                             <td>{{ case.id }}</td>
                             <td>{{ case.region }}</td>
                             <td>{{ case.division }}</td>
-                            <td>{{ case.metro_area or "—" }}</td>
+                            <td>{{ case.metro_area or "-" }}</td>
                             <td>{{ case.land_location }}</td>
                             <td>{{ case.land_size }}</td>
                             <td>{{ case.lawyer_name }}</td>
                             <td>{{ case.court_name }}</td>
                             <td>{{ case.dispute_reason }}</td>
-                            <td>{{ case.submitted_at.strftime('%Y-%m-%d %H:%M') }}</td>
+                            <td>{{ case.years_litigation }}</td> <!-- ✅ NEW FIELD -->
+                            <td>{{ case.submitted_at.strftime("%Y-%m-%d %H:%M") }}</td>
                         </tr>
                         {% endfor %}
-                    </tbody>
-                </table>
-            </div>
-            {% else %}
-            <p style="text-align: center; padding: 2rem; color: var(--gray-600); font-size: 1.1rem;">No cases submitted yet.</p>
-            {% endif %}
+                    {% else %}
+                        <tr>
+                            <td colspan="11" style="text-align: center; padding: 2rem; color: #666;">No cases submitted yet.</td>
+                        </tr>
+                    {% endif %}
+                </tbody>
+            </table>
         </div>
         {% endif %}
     </div>
